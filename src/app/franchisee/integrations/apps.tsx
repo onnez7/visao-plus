@@ -1,0 +1,111 @@
+// app/integrations/apps.tsx
+import {
+  IconBrandDiscord,
+  IconBrandDocker,
+  IconBrandFigma,
+  IconBrandGithub,
+  IconBrandGitlab,
+  IconBrandGmail,
+  IconBrandMedium,
+  IconBrandNotion,
+  IconBrandSkype,
+  IconBrandSlack,
+  IconBrandStripe,
+  IconBrandTelegram,
+  IconBrandTrello,
+  IconBrandWhatsapp,
+  IconBrandZoom,
+} from '@tabler/icons-react';
+
+export const apps = [
+  {
+    name: 'Telegram',
+    logo: <IconBrandTelegram />,
+    connected: false,
+    desc: 'Conecte-se com o Telegram para comunicação em tempo real.',
+  },
+  {
+    name: 'Notion',
+    logo: <IconBrandNotion />,
+    connected: true,
+    desc: 'Sincronize páginas do Notion para colaboração contínua.',
+  },
+  {
+    name: 'Figma',
+    logo: <IconBrandFigma />,
+    connected: true,
+    desc: 'Visualize e colabore em designs do Figma em um só lugar.',
+  },
+  {
+    name: 'Trello',
+    logo: <IconBrandTrello />,
+    connected: false,
+    desc: 'Sincronize cartões do Trello para gerenciamento de projetos simplificado.',
+  },
+  {
+    name: 'Slack',
+    logo: <IconBrandSlack />,
+    connected: false,
+    desc: 'Integre o Slack para comunicação eficiente da equipe.',
+  },
+  {
+    name: 'Zoom',
+    logo: <IconBrandZoom />,
+    connected: true,
+    desc: 'Hospede reuniões do Zoom diretamente do painel.',
+  },
+  {
+    name: 'Stripe',
+    logo: <IconBrandStripe />,
+    connected: false,
+    desc: 'Gerencie transações e pagamentos do Stripe facilmente.',
+  },
+  {
+    name: 'Gmail',
+    logo: <IconBrandGmail />,
+    connected: true,
+    desc: 'Acesse e gerencie mensagens do Gmail sem esforço.',
+  },
+  {
+    name: 'Medium',
+    logo: <IconBrandMedium />,
+    connected: false,
+    desc: 'Explore e compartilhe histórias do Medium no seu painel.',
+  },
+  {
+    name: 'Skype',
+    logo: <IconBrandSkype />,
+    connected: false,
+    desc: 'Conecte-se com contatos do Skype de forma integrada.',
+  },
+  {
+    name: 'Docker',
+    logo: <IconBrandDocker />,
+    connected: false,
+    desc: 'Gerencie contêineres do Docker no seu painel.',
+  },
+  {
+    name: 'GitHub',
+    logo: <IconBrandGithub />,
+    connected: false,
+    desc: 'Simplifique o gerenciamento de código com a integração do GitHub.',
+  },
+  {
+    name: 'GitLab',
+    logo: <IconBrandGitlab />,
+    connected: false,
+    desc: 'Gerencie projetos de código com a integração do GitLab.',
+  },
+  {
+    name: 'Discord',
+    logo: <IconBrandDiscord />,
+    connected: false,
+    desc: 'Conecte-se com o Discord para comunicação de equipe fluida.',
+  },
+  {
+    name: 'WhatsApp',
+    logo: <IconBrandWhatsapp />,
+    connected: false,
+    desc: 'Integre o WhatsApp para mensagens diretas.',
+  },
+];
