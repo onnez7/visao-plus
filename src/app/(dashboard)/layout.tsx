@@ -3,7 +3,11 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { Suspense } from "react";
+import { Suspense, memo } from "react";
+
+// Memoize the sidebar and header components to prevent unnecessary re-renders
+const MemoizedAppSidebar = memo(AppSidebar);
+const MemoizedSiteHeader = memo(SiteHeader);
 
 export default function DashboardLayout({
   children,
@@ -12,9 +16,9 @@ export default function DashboardLayout({
 }) {
   return (
     <SidebarProvider>
-      <AppSidebar variant="inset" />
+      <MemoizedAppSidebar variant="inset" />
       <SidebarInset>
-        <SiteHeader />
+        <MemoizedSiteHeader />
         <Suspense fallback={<div>Loading...</div>}>
           {children}
         </Suspense>
