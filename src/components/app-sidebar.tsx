@@ -1,9 +1,8 @@
-// src/components/app-sidebar.tsx
 "use client"
 
-import React, { useMemo, useEffect, useState, memo } from "react"
+import React, { useMemo, useEffect, useState, memo, useCallback } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import {
   Calendar,
   ChartNoAxesCombined,
@@ -32,6 +31,45 @@ import {
 import { NavMain } from "./nav-main"
 import { NavSecondary } from "./nav-secondary"
 import { NavUser } from "./nav-user"
+
+// Custom hook for user data management
+const useUserData = () => {
+  const [userRole, setUserRole] = useState<string | null>(null)
+  const [userData, setUserData] = useState<{ name: string; email: string; avatar: string }>({
+    name: "Usuário",
+    email: "email@example.com",
+    avatar: "/avatars/default.jpg",
+  })
+
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        const { data, error } = await supabase
+          .from('users')
+          .select('role, name, email')
+          .eq('id', user.id)
+          .single()
+
+        if (error) {
+          console.error('Erro ao buscar papel do usuário:', error)
+          return
+        }
+
+        setUserRole(data.role)
+        setUserData({
+          name: data.name || "Usuário",
+          email: data.email || "email@example.com",
+          avatar: "/avatars/default.jpg",
+        })
+      }
+    }
+
+    fetchUserRole()
+  }, [])
+
+  return { userRole, userData }
+}
 
 // Memoize the navigation items configuration
 const useNavItems = (userRole: string | null) => {
@@ -100,46 +138,24 @@ const useNavItems = (userRole: string | null) => {
   }, [userRole])
 }
 
-// Memoize the user data component
+// Memoize navigation components
+const MemoizedNavMain = memo(NavMain);
+const MemoizedNavSecondary = memo(NavSecondary);
 const MemoizedNavUser = memo(NavUser);
 
 export const AppSidebar = memo(function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
-  const pathname = usePathname()
-  const [userRole, setUserRole] = useState<string | null>(null)
-  const [userData, setUserData] = useState<{ name: string; email: string; avatar: string }>({
-    name: "Usuário",
-    email: "email@example.com",
-    avatar: "/avatars/default.jpg",
-  })
+  const { userRole, userData } = useUserData();
+  const navItems = useNavItems(userRole);
+  const router = useRouter();
 
+  // Prefetch navigation links
   useEffect(() => {
-    const fetchUserRole = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (user) {
-        const { data, error } = await supabase
-          .from('users')
-          .select('role, name, email')
-          .eq('id', user.id)
-          .single()
-
-        if (error) {
-          console.error('Erro ao buscar papel do usuário:', error)
-          return
-        }
-
-        setUserRole(data.role)
-        setUserData({
-          name: data.name || "Usuário",
-          email: data.email || "email@example.com",
-          avatar: "/avatars/default.jpg",
-        })
-      }
+    if (navItems) {
+      [...navItems.navMain, ...navItems.navSecondary].forEach(item => {
+        router.prefetch(item.url);
+      });
     }
-
-    fetchUserRole()
-  }, [])
-
-  const navItems = useNavItems(userRole)
+  }, [navItems, router]);
 
   return (
     <Sidebar collapsible="offcanvas" {...props}>
@@ -158,12 +174,12 @@ export const AppSidebar = memo(function AppSidebar(props: React.ComponentProps<t
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={navItems.navMain} />
-        <NavSecondary items={navItems.navSecondary} className="mt-auto" />
+        <MemoizedNavMain items={navItems.navMain} />
+        <MemoizedNavSecondary items={navItems.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
         <MemoizedNavUser user={userData} />
       </SidebarFooter>
     </Sidebar>
-  )
-})
+  );
+});
